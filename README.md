@@ -3,7 +3,7 @@ wMbus receiver based on STM32L476 Nucleo and Hoperf RFM95
 
 wMBus mode T1 and C1 are done. Receiving mode C1 datagrams is not good
 now because of missing channel coding: RFM95 seems having problems with
-long 0- or 1-sequences. Playing with bandwidth (and frequency deviaion)
+clock long 0- or 1-sequences. Playing with bandwidth (and frequency deviation)
 may help.
 
 Project has been compiled on Windows 7 with toolchain installed by following instructions
