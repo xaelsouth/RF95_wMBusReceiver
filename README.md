@@ -14,14 +14,18 @@ I've taken the liberty of copying documents for hardware parts (MCU and radio tr
 into the "doc" directory.
 
 RFM95 is a clone of Semtech's SX1276. Both are widely compatible to each other
-with exception of few registers. So the driver written by Semtech could be adopted to
-receive wmBus datagrams (s. src/radio and src/platform).
+with exception of few registers. So that the driver written by Semtech could be adopted to
+receive wmBus datagrams (s. src/radio and src/platform). For the original
+Semtech's driver see doc/sx12xxDrivers-V2.1.0.zip and doc/sx1276_mbed.zip.
 
 Doing first steps with STM32 microcontroller the use of STM32CubeMX for
 code generation was enormously helpful.
 
-The state machine from rtl-wmbus-Projekt which works with synchronized bit stream has been recycled too.
+The state machine from earlier rtl-wmbus-Projekt which works with synchronized bit stream has been recycled too.
+
+I will be quite happy to know if you have been using that stuff in your own project.
 
 TODO:
-	Hardware description
-	Software description
+	* Hardware description
+	* Software description
+	* Formatting
