@@ -64,6 +64,9 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 
+/* USER CODE BEGIN PFP */
+/* Private function prototypes -----------------------------------------------*/
+
 enum {
 	SPI_TRANSFER_WAIT,
 	SPI_TRANSFER_COMPLETE,
@@ -131,8 +134,8 @@ enum
 
 volatile int uartDmaTransferStatus = UART_DMA_TRANSFER_COMPLETE;
 
-volatile static uint8_t uart4RxBuffer[128];
-volatile static size_t uart4RxBufferIdx;
+static volatile uint8_t uart4RxBuffer[128];
+static volatile size_t uart4RxBufferIdx;
 
 /**
   * @brief  Tx Transfer completed callback
@@ -204,40 +207,9 @@ int __io_putchar(int ch)
   return ch;
 }
 
-int main(void)
+
+void rx_wmbus( void )
 {
-
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration----------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_SPI1_Init();
-  MX_SPI3_Init();
-  MX_RTC_Init();
-  MX_UART4_Init();
-  MX_LPTIM1_Init();
-  MX_LPUART1_UART_Init();
-
-  /* USER CODE BEGIN 2 */
   uint32_t syncPattern = 0;
   unsigned overflow = 0;
   unsigned crc_ok_of_total_packets = 0;
@@ -248,24 +220,16 @@ int main(void)
   Radio->Init( );
   Radio->StartRx();
 
+  MX_SPI3_Init();
+
   if(HAL_SPI_Receive_DMA(&hspi3, spiRxBuffer, SPI_RX_BUFFER_SIZE) != HAL_OK)
   {
 	Error_Handler();
   }
 
-  if (HAL_UART_Receive_DMA(&huart4, &uart4RxBuffer[uart4RxBufferIdx], 4u)!= HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  
   while (1)
   {
-  /* USER CODE END WHILE */
-
-  /* USER CODE BEGIN 3 */
 	  while (spiTransferState == SPI_TRANSFER_WAIT);
 
 	  spiTransferState = SPI_TRANSFER_WAIT;
@@ -315,8 +279,50 @@ int main(void)
 	    //Error_Handler();
 		  ++overflow;
 	  }
+    }  
+}
+
+int main(void)
+{
+
+  /* USER CODE BEGIN 1 */
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration----------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_SPI1_Init();
+  MX_RTC_Init();
+  MX_UART4_Init();
+  MX_LPTIM1_Init();
+  MX_LPUART1_UART_Init();
+
+  /* USER CODE BEGIN 2 */
+  if (HAL_UART_Receive_DMA(&huart4, &uart4RxBuffer[uart4RxBufferIdx], 4u)!= HAL_OK)
+  {
+    Error_Handler();
   }
-  
+  /* USER CODE END 2 */
+
+  rx_wmbus();
+
   return 0;  
   /* USER CODE END 3 */
 
